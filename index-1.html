@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a5cff">
+<meta name="description" content="SABERX: plataforma institucional de preparación para Saber 11.">
+<title>SABERX | Plataforma Saber 11</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a5cff'/%3E%3Ctext x='32' y='42' font-size='28' font-weight='800' text-anchor='middle' fill='white' font-family='Arial,sans-serif'%3ESX%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#f5f7fb;color:#10244f}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+h2,h3{line-height:1.25}
+.hidden{display:none!important}
+.login{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#06102f,#0a5cff)}
+.login-card{width:min(460px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 25px 80px #00143d55}
+.boot-card{text-align:center;color:#fff}
+.boot-card .logo-badge{margin:0 auto 14px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:26px}
+.logo-badge{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#0a5cff,#11b5e4);display:grid;place-items:center;color:#fff;font-weight:800;flex:none}
+.muted{color:#667085}
+.small{font-size:12px}
+.field{display:block;margin:12px 0}
+.field>span{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #d9e0eb;border-radius:11px;outline:0;background:#fff;color:inherit}
+.field input[readonly]{background:#f3f5f9;color:#667085}
+.field textarea{min-height:105px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#0a5cff;box-shadow:0 0 0 3px #0a5cff26}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700;transition:filter .15s}
+.btn:hover:not(:disabled){filter:brightness(.96)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn:focus-visible,.nav button:focus-visible,.option:focus-visible,.tabs button:focus-visible,.close:focus-visible{outline:3px solid #0a5cff55;outline-offset:2px}
+.btn.block{width:100%}
+.link{background:none;border:0;padding:6px 0;color:#0a5cff;font-weight:700;font-size:13px}
+.link:hover{text-decoration:underline}
+.primary{background:#0a5cff;color:#fff}
+.secondary{background:#edf2f8;color:#243b64}
+.danger{background:#feeceb;color:#b42318}
+.success{background:#e8f7ef;color:#137333}
+.layout{display:grid;grid-template-columns:245px 1fr;min-height:100vh;min-height:100dvh}
+.side{background:#06102f;color:#fff;padding:18px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;height:100dvh;overflow:auto}
+.side .logo{margin-bottom:25px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{border:0;background:transparent;color:#b8c2d9;text-align:left;padding:11px 12px;border-radius:10px;font-weight:600}
+.nav button.active,.nav button:hover{background:#ffffff18;color:#fff}
+.main{min-width:0}
+.top{min-height:72px;background:#fff;border-bottom:1px solid #e8edf4;padding:8px 25px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5}
+.content{padding:24px;max-width:1500px;margin:auto}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,1fr)}
+.two{grid-template-columns:repeat(2,1fr)}
+.three{grid-template-columns:repeat(3,1fr)}
+.card{background:#fff;border:1px solid #e8edf4;border-radius:17px;padding:18px;box-shadow:0 2px 9px #10244f08}
+.card h3{margin-top:0}
+.stat{font-size:29px;font-weight:800;margin-top:5px}
+.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.toolbar-left{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{padding:11px;border-bottom:1px solid #edf0f5;text-align:left;white-space:nowrap}
+.table th{font-size:11px;text-transform:uppercase;color:#718096;background:#f8fafc}
+.table td.wrap{white-space:normal;min-width:300px}
+.table td.actions{display:flex;gap:6px}
+.badge{display:inline-block;padding:4px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#e9efff;color:#214dc6}
+.badge.off{background:#f2f4f7;color:#667085}
+.modal{position:fixed;inset:0;background:#07122d88;display:grid;place-items:center;padding:20px;z-index:50}
+.modal-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:19px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.close{border:0;background:#eef2f7;border-radius:9px;padding:8px 10px}
+.toast{position:fixed;right:20px;bottom:20px;left:20px;max-width:420px;margin-left:auto;background:#0b1737;color:#fff;padding:13px 17px;border-radius:11px;z-index:100;box-shadow:0 10px 30px #00143d44}
+.toast.error{background:#b42318}
+.hero{background:linear-gradient(135deg,#06102f,#0a5cff);color:#fff;border-radius:19px;padding:25px;margin-bottom:18px}
+.hero h2{margin:0 0 8px}
+.notice{padding:11px 13px;border-radius:10px;background:#fff8db;color:#815d00;font-size:13px}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:18px;padding-bottom:2px}
+.tabs button{border:0;background:#eaf0f8;padding:9px 13px;border-radius:10px;font-weight:700;color:#344767;white-space:nowrap}
+.tabs button.active{background:#0a5cff;color:#fff}
+.question{font-size:17px;font-weight:700;line-height:1.5;margin:16px 0}
+.option{width:100%;display:flex;gap:10px;text-align:left;border:2px solid #e4e9f1;background:#fff;padding:13px;border-radius:12px;margin:9px 0;color:inherit}
+.option:hover{border-color:#b9cdf5}
+.option.selected{border-color:#0a5cff;background:#eff6ff}
+.progress{height:9px;background:#e7ebf2;border-radius:99px;overflow:hidden}
+.bar{height:100%;background:linear-gradient(90deg,#0a5cff,#11b5e4);transition:width .25s}
+.empty{text-align:center;padding:35px;color:#667085}
+.footer-note{margin-top:14px;font-size:11px;color:#7a8497;text-align:center}
+.msg{margin:12px 0 0;min-height:18px;font-size:13px;color:#475467}
+.msg.error{color:#b42318}
+.msg.ok{color:#137333}
+.check-list{max-height:260px;overflow:auto;border:1px solid #d9e0eb;border-radius:11px;padding:6px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:8px;font-size:13px;cursor:pointer}
+.check:hover{background:#f3f6fb}
+.check input{margin-top:3px;flex:none}
+.check-inline{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600;margin:12px 0;cursor:pointer}
+.score{font-size:46px;font-weight:800;margin:4px 0}
+@media(max-width:900px){
+.layout{grid-template-columns:1fr}
+.side{height:auto;z-index:10;padding:10px 10px 8px}
+.side .logo{margin:0 0 8px;font-size:20px}
+.side .logo-badge{width:34px;height:34px;border-radius:10px;font-size:13px}
+.nav{flex-direction:row;overflow-x:auto;gap:4px}
+.nav button{white-space:nowrap;font-size:12px;padding:9px 11px}
+.top{position:static}
+.stats,.two,.three{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+.stats,.two,.three{grid-template-columns:1fr}
+.content{padding:14px}
+.top{padding:8px 14px}
+.login-card{padding:24px}
+.field input,.field select,.field textarea{font-size:16px}
+.toast{right:12px;left:12px;bottom:12px}
+}
+</style>
+</head>
+<body>
+<div id="boot" class="login"><div class="boot-card"><div class="logo-badge">SX</div><div id="bootMsg">Cargando SABERX…</div></div></div>
+
+<div id="loginView" class="login hidden">
+  <div class="login-card">
+    <div class="logo"><div class="logo-badge">SX</div>SABERX</div>
+    <p class="muted">Plataforma institucional de preparación para Saber 11</p>
+    <form id="loginForm" novalidate>
+      <label class="field"><span>Correo</span><input id="email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required placeholder="correo@colegio.edu.co"></label>
+      <label class="field"><span>Contraseña</span><input id="password" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+      <button id="loginBtn" type="submit" class="btn primary block">Iniciar sesión</button>
+    </form>
+    <div style="text-align:center;margin-top:8px"><button type="button" class="link" id="forgotBtn">¿Olvidaste tu contraseña?</button></div>
+    <p id="loginMsg" class="msg" role="alert"></p>
+    <div class="footer-note">© SABERX · Preparación para Saber 11</div>
+  </div>
+</div>
+
+<div id="appView" class="hidden"></div>
+
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="modalTitle" style="margin:0">Editar</h3><button type="button" class="close" data-act="closeModal" aria-label="Cerrar">✕</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script>
+// Si el módulo principal no llega a cargar (sin internet o Firebase bloqueado), avisa en vez de quedar en blanco.
+setTimeout(function(){
+  if(window.__saberxReady)return;
+  var m=document.getElementById('bootMsg');
+  if(m)m.innerHTML='No se pudo cargar la aplicación.<br>Revisa tu conexión a internet y recarga la página.';
+},12000);
+</script>
+
+<script type="module">
+import {initializeApp,getApps,getApp} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+import {getFirestore,collection,doc,getDoc,getDocs,addDoc,setDoc,updateDoc,deleteDoc,query,where,serverTimestamp,increment} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+import {getFunctions,httpsCallable} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-functions.js';
+
+const firebaseConfig={apiKey:'AIzaSyDM41_-4rNwPSyv25ZxjIr9CWV5fOndyhI',authDomain:'saberx-5f8a8.firebaseapp.com',projectId:'saberx-5f8a8',storageBucket:'saberx-5f8a8.firebasestorage.app',messagingSenderId:'137362785884',appId:'1:137362785884:web:3f0e41fd07dc911c854899'};
+const app=getApps().length?getApp():initializeApp(firebaseConfig);
+const auth=getAuth(app),db=getFirestore(app),functions=getFunctions(app);
+
+/* ---------- Constantes y estado ---------- */
+const STAFF=['admin','institucion','directivo','docente'];
+const AREAS=['Matemáticas','Lectura Crítica','Sociales y Ciudadanas','Ciencias Naturales','Inglés'];
+const ROLES={admin:'Administrador',institucion:'Institución',directivo:'Directivo',docente:'Docente',estudiante:'Estudiante'};
+const KINDS={
+  estudiante:{col:'estudiantes',key:'students',plural:'Estudiantes',third:'Curso'},
+  docente:{col:'docentes',key:'teachers',plural:'Docentes',third:'Materia'},
+  directivo:{col:'directivos',key:'directivos',plural:'Directivos',third:'Cargo'}
+};
+const TABS={instituciones:'🏫 Colegios',directivos:'👔 Directivos',docentes:'👨‍🏫 Docentes',estudiantes:'👨‍🎓 Estudiantes',simulacros:'📝 Simulacros'};
+const TAB_KIND={directivos:'directivo',docentes:'docente',estudiantes:'estudiante'};
+const TITLES={inicio:'Inicio',simulacro:'Simulacros',resultados:'Resultados',preguntas:'Banco de preguntas',gestion:'Gestión institucional',perfil:'Mi perfil'};
+
+const freshState=()=>({user:null,perfil:null,section:'inicio',gestionTab:null,questions:[],simulacros:[],students:[],teachers:[],directivos:[],instituciones:[],results:[],currentSim:null,currentIndex:0,answers:{},busy:false});
+const state=freshState();
+
+/* ---------- Utilidades ---------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const clean=o=>Object.fromEntries(Object.entries(o).filter(([,v])=>v!==undefined));
+const tsMs=v=>{if(!v)return 0;if(typeof v.toMillis==='function')return v.toMillis();const t=new Date(v).getTime();return Number.isNaN(t)?0:t};
+const fmtDate=v=>{const t=tsMs(v);return t?new Date(t).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'}):'—'};
+const role=()=>state.perfil?.rol||'';
+const isStaff=()=>STAFF.includes(role());
+const isAdmin=()=>role()==='admin';
+const qById=id=>state.questions.find(q=>q.id===id);
+const examQs=()=>(state.currentSim?.preguntas||[]).map(qById).filter(Boolean);
+const fld=(label,control,style)=>`<label class="field"${style?` style="${style}"`:''}><span>${label}</span>${control}</label>`;
+const opts=(list,sel)=>list.map(o=>`<option value="${esc(o)}"${o===sel?' selected':''}>${esc(o)}</option>`).join('');
+
+let toastTimer;
+function toast(m,type){const t=$('toast');t.textContent=m;t.className='toast'+(type==='error'?' error':'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),type==='error'?5500:2800)}
+function setMsg(m,type){const el=$('loginMsg');el.textContent=m||'';el.className='msg'+(type?' '+type:'')}
+function setLoginBusy(b){$('loginBtn').disabled=b;$('forgotBtn').disabled=b;$('loginBtn').textContent=b?'Ingresando…':'Iniciar sesión'}
+
+function authError(err){
+  switch(err?.code){
+    case 'auth/invalid-credential':case 'auth/wrong-password':case 'auth/user-not-found':return 'Correo o contraseña incorrectos.';
+    case 'auth/invalid-email':return 'El correo no es válido.';
+    case 'auth/user-disabled':return 'Esta cuenta está deshabilitada. Contacta a tu institución.';
+    case 'auth/too-many-requests':return 'Demasiados intentos. Espera unos minutos o restablece tu contraseña.';
+    case 'auth/network-request-failed':return 'Sin conexión. Revisa tu internet e inténtalo de nuevo.';
+    default:return err?.message||'No se pudo iniciar sesión.';
+  }
+}
+function errMsg(err){
+  const c=err?.code||'';
+  if(c.includes('permission-denied'))return 'No tienes permisos para realizar esta acción.';
+  if(c.includes('unavailable')||c.includes('network'))return 'Sin conexión con el servidor. Inténtalo de nuevo.';
+  if(c==='functions/not-found')return 'La función "createManagedUser" no está desplegada en Firebase.';
+  if(c==='functions/already-exists')return 'Ya existe una cuenta con ese correo.';
+  if(c==='functions/unauthenticated')return 'Tu sesión expiró. Vuelve a iniciar sesión.';
+  if(c==='functions/invalid-argument')return err.message||'Datos inválidos.';
+  return err?.message||'Ocurrió un error inesperado.';
+}
+
+/* ---------- Modal ---------- */
+function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.remove('hidden');document.body.style.overflow='hidden'}
+function closeModal(){$('modal').classList.add('hidden');$('modalBody').innerHTML='';document.body.style.overflow=''}
+$('modal').addEventListener('mousedown',e=>{if(e.target===$('modal'))closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal').classList.contains('hidden'))closeModal()});
+
+function bindForm(id,handler){
+  const form=$(id);
+  form.onsubmit=async e=>{
+    e.preventDefault();
+    const btn=form.querySelector('.btn.primary');
+    if(btn.disabled)return;
+    btn.disabled=true;
+    try{await handler(new FormData(form))}
+    catch(err){console.error(err);toast(errMsg(err),'error');btn.disabled=false}
+  };
+}
+
+/* ---------- Autenticación ---------- */
+function ready(){window.__saberxReady=true;$('boot').classList.add('hidden')}
+
+function resetSession(){
+  Object.assign(state,freshState());
+  closeModal();
+  $('appView').classList.add('hidden');$('appView').innerHTML='';
+  $('loginView').classList.remove('hidden');
+  $('password').value='';
+  setLoginBusy(false);
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=$('email').value.trim(),pass=$('password').value;
+  if(!email||!pass){setMsg('Escribe tu correo y tu contraseña.','error');return}
+  setMsg('Iniciando sesión…');setLoginBusy(true);
+  try{await signInWithEmailAndPassword(auth,email,pass)}
+  catch(err){setMsg(authError(err),'error');setLoginBusy(false)}
+});
+
+$('forgotBtn').addEventListener('click',async()=>{
+  const email=$('email').value.trim();
+  if(!email){setMsg('Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?".','error');$('email').focus();return}
+  try{await sendPasswordResetEmail(auth,email);setMsg('Si el correo está registrado, recibirás un enlace para crear una nueva contraseña.','ok')}
+  catch(err){setMsg(authError(err),'error')}
+});
+
+onAuthStateChanged(auth,async u=>{
+  if(!u){resetSession();ready();return}
+  if(state.user?.uid===u.uid&&state.perfil)return;
+  try{
+    const snap=await getDoc(doc(db,'usuarios',u.uid));
+    if(!snap.exists()){
+      await signOut(auth);
+      setMsg('Tu cuenta existe, pero no tiene un perfil en SABERX. Contacta a tu institución.','error');
+      ready();return;
+    }
+    state.user=u;state.perfil=snap.data();
+    await loadData();
+    setMsg('');
+    showApp();
+  }catch(err){
+    console.error(err);
+    try{await signOut(auth)}catch{}
+    setMsg(errMsg(err),'error');
+  }finally{ready()}
+});
+
+async function logout(){
+  try{await signOut(auth);setMsg('')}
+  catch(err){toast(errMsg(err),'error')}
+}
+
+/* ---------- Carga de datos ---------- */
+async function loadData(){
+  const p=state.perfil||{},inst=p.institucionId||null,admin=p.rol==='admin',staff=STAFF.includes(p.rol),fails=[];
+  const list=async(q,label)=>{
+    if(!q)return[];
+    try{return(await getDocs(q)).docs.map(d=>({id:d.id,...d.data()}))}
+    catch(e){console.error('Error cargando '+label,e);fails.push(label);return[]}
+  };
+  // Consulta limitada a la institución del usuario (el administrador ve todo).
+  const scoped=(name,...extra)=>{const c=collection(db,name);return admin?query(c,...extra):inst?query(c,where('institucionId','==',inst),...extra):null};
+  const byDateDesc=(a,b)=>tsMs(b.fechaRealizacion)-tsMs(a.fechaRealizacion);
+
+  const [questions,simulacros]=await Promise.all([
+    list(collection(db,'preguntas'),'preguntas'),
+    list(staff?scoped('simulacros'):(inst?query(collection(db,'simulacros'),where('institucionId','==',inst),where('activo','==',true)):query(collection(db,'simulacros'),where('activo','==',true))),'simulacros')
+  ]);
+  state.questions=questions.sort((a,b)=>(AREAS.indexOf(a.area)-AREAS.indexOf(b.area))||String(a.enunciado||'').localeCompare(String(b.enunciado||''),'es'));
+  state.simulacros=simulacros.sort((a,b)=>String(a.titulo||'').localeCompare(String(b.titulo||''),'es'));
+
+  if(admin){
+    state.instituciones=await list(collection(db,'instituciones'),'colegios');
+  }else if(inst){
+    try{const s=await getDoc(doc(db,'instituciones',inst));state.instituciones=s.exists()?[{id:s.id,...s.data()}]:[]}
+    catch{state.instituciones=[]}
+  }
+
+  if(staff){
+    const [students,teachers,directivos,results]=await Promise.all([
+      list(scoped('estudiantes'),'estudiantes'),
+      list(scoped('docentes'),'docentes'),
+      list(scoped('directivos'),'directivos'),
+      list(scoped('resultados'),'resultados')
+    ]);
+    Object.assign(state,{students,teachers,directivos});
+    state.results=results.sort(byDateDesc);
+  }else if(p.rol==='estudiante'){
+    try{const s=await getDoc(doc(db,'estudiantes',state.user.uid));state.students=[{id:state.user.uid,...(s.exists()?s.data():{})}]}
+    catch(e){console.error(e);state.students=[{id:state.user.uid}]}
+    state.results=(await list(query(collection(db,'resultados'),where('estudianteId','==',state.user.uid)),'resultados')).sort(byDateDesc).slice(0,50);
+  }
+  if(fails.length)toast('No se pudieron cargar: '+fails.join(', ')+'.','error');
+}
+
+/* ---------- Estructura general ---------- */
+function showApp(){
+  $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
+  state.section='inicio';state.currentSim=null;state.gestionTab=null;
+  renderShell();navigate('inicio');
+}
+function renderShell(){
+  const p=state.perfil||{};
+  $('appView').innerHTML=`<div class="layout"><aside class="side"><div class="logo"><div class="logo-badge">SX</div>SABERX</div><nav class="nav"><button data-s="inicio">🏠 Inicio</button><button data-s="simulacro">📝 Simulacros</button><button data-s="resultados">📊 Resultados</button><button data-s="preguntas">📚 Banco</button>${isStaff()?'<button data-s="gestion">⚙️ Gestión</button>':''}<button data-s="perfil">👤 Perfil</button></nav></aside><main class="main"><header class="top"><div><strong id="pageTitle">Inicio</strong><div class="small muted">${esc(p.nombre||p.email||'Usuario')} · ${esc(ROLES[p.rol]||p.rol||'')}</div></div><button type="button" class="btn secondary" data-act="logout">Salir</button></header><section class="content" id="page"></section></main></div>`;
+}
+function navigate(s){
+  state.section=s;
+  document.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('active',b.dataset.s===s));
+  $('pageTitle').textContent=TITLES[s]||'SABERX';
+  render();
+  window.scrollTo(0,0);
+}
+function render(){
+  const s=state.section;
+  $('page').innerHTML=s==='inicio'?home():s==='simulacro'?simPage():s==='resultados'?resultsPage():s==='preguntas'?questionsPage():s==='gestion'?gestionPage():profilePage();
+}
+
+/* ---------- Inicio ---------- */
+const statCard=(label,value)=>`<div class="card"><div class="muted small">${label}</div><div class="stat">${value}</div></div>`;
+function home(){
+  const p=state.perfil||{};
+  if(p.rol==='estudiante'){
+    const st=state.students[0]||{},last=state.results[0];
+    return `<div class="hero"><h2>¡Hola, ${esc(p.nombre||'estudiante')}! 👋</h2><div>Prepárate para Saber 11 con simulacros y seguimiento de resultados.</div></div><div class="grid stats">${statCard('Puntaje estimado',st.puntajeEstimado??last?.puntaje??0)}${statCard('Simulacros',Math.max(st.simulacrosRealizados||0,state.results.length))}${statCard('Preguntas en el banco',state.questions.length)}${statCard('Meta',st.meta||400)}</div><div style="margin-top:16px"><button class="btn primary" data-s="simulacro">Ir a los simulacros</button></div>`;
+  }
+  if(isStaff()){
+    const avg=state.results.length?Math.round(state.results.reduce((a,r)=>a+(Number(r.puntaje)||0),0)/state.results.length):0;
+    return `<div class="hero"><h2>Panel institucional</h2><div>Gestiona colegios, directivos, docentes, estudiantes, preguntas y simulacros.</div></div><div class="grid stats">${statCard('Estudiantes',state.students.length)}${statCard('Docentes',state.teachers.length)}${statCard('Directivos',state.directivos.length)}${statCard('Promedio',avg)}</div><div class="card" style="margin-top:16px"><h3>Acciones rápidas</h3><div class="toolbar-left"><button class="btn primary" data-act="openQuestion">+ Pregunta</button><button class="btn secondary" data-act="openSim">+ Simulacro</button><button class="btn secondary" data-act="openUser" data-kind="estudiante">+ Estudiante</button><button class="btn secondary" data-act="openUser" data-kind="docente">+ Docente</button><button class="btn secondary" data-act="openUser" data-kind="directivo">+ Directivo</button>${isAdmin()?'<button class="btn secondary" data-act="openInstitution">+ Colegio</button>':''}</div></div>`;
+  }
+  return '<div class="card"><h2 style="margin:0">Bienvenido a SABERX</h2><p class="muted">Tu perfil no tiene un rol asignado. Contacta a tu institución.</p></div>';
+}
+
+/* ---------- Simulacros ---------- */
+function simPage(){
+  if(state.currentSim)return examPage();
+  return `<div class="toolbar"><div><h2 style="margin:0">Simulacros disponibles</h2><div class="muted small">Selecciona una prueba para comenzar.</div></div>${isStaff()?'<button class="btn primary" data-act="openSim">+ Crear simulacro</button>':''}</div><div class="grid three">${state.simulacros.map(s=>{const n=(s.preguntas||[]).filter(qById).length;return `<div class="card"><h3>${esc(s.titulo)}</h3><span class="badge">${esc(s.area||'Mixto')}</span>${s.activo===false?' <span class="badge off">Inactivo</span>':''}<p class="muted small">${n} pregunta${n===1?'':'s'}</p><button class="btn primary" data-act="startSim" data-id="${esc(s.id)}" ${n?'':'disabled'}>Comenzar</button></div>`}).join('')||'<div class="card empty">No hay simulacros disponibles.</div>'}</div>`;
+}
+function examPage(){
+  const qs=examQs();
+  if(!qs.length)return '<div class="card empty">Este simulacro no tiene preguntas disponibles.<br><br><button class="btn secondary" data-act="exitSim">← Volver</button></div>';
+  state.currentIndex=Math.min(Math.max(state.currentIndex,0),qs.length-1);
+  const i=state.currentIndex,q=qs[i],last=i===qs.length-1;
+  return `<div class="toolbar"><button class="btn secondary" data-act="exitSim">← Salir</button><span class="badge">Pregunta ${i+1} de ${qs.length}</span></div><div class="progress"><div class="bar" style="width:${((i+1)/qs.length)*100}%"></div></div><div class="card" style="margin-top:16px"><div class="muted small">${esc(q.area)}${q.dificultad?' · '+esc(q.dificultad):''}</div><div class="question">${esc(q.enunciado)}</div>${(q.opciones||[]).map((o,k)=>`<button type="button" class="option ${state.answers[q.id]===k?'selected':''}" data-act="answer" data-i="${k}"><b>${String.fromCharCode(65+k)}</b><span>${esc(o)}</span></button>`).join('')}<div class="toolbar" style="margin-top:20px"><button class="btn secondary" data-act="prevQ" ${i===0?'disabled':''}>Anterior</button>${last?'<button class="btn success" data-act="finishSim">Terminar</button>':'<button class="btn primary" data-act="nextQ">Siguiente</button>'}</div></div>`;
+}
+function rerenderKeepingScroll(){const y=window.scrollY;render();window.scrollTo(0,y)}
+
+async function finishSim(){
+  if(state.busy)return;
+  const s=state.currentSim,qs=examQs();
+  if(!s||!qs.length)return;
+  const pending=qs.filter(q=>state.answers[q.id]==null).length;
+  if(pending&&!confirm(`Tienes ${pending} pregunta${pending===1?'':'s'} sin responder. ¿Terminar de todos modos?`))return;
+  state.busy=true;
+  document.querySelectorAll('[data-act="finishSim"]').forEach(b=>b.disabled=true);
+  let ok=0;const byArea={};
+  const respuestas=qs.map(q=>{
+    const r=state.answers[q.id],good=r===Number(q.correcta);
+    if(good)ok++;
+    const a=q.area||'Otra';byArea[a]=byArea[a]||{ok:0,total:0};byArea[a].total++;if(good)byArea[a].ok++;
+    return{preguntaId:q.id,respuesta:r??null,correcta:Number(q.correcta),ok:good,area:q.area||null};
+  });
+  const puntaje=Math.round(ok/qs.length*500),uid=state.user.uid;
+  const data=clean({estudianteId:uid,simulacroId:s.id,simulacroTitulo:s.titulo||null,institucionId:state.perfil.institucionId??null,puntaje,aciertos:ok,errores:qs.length-ok,respuestas});
+  try{
+    const ref=await addDoc(collection(db,'resultados'),{...data,fechaRealizacion:serverTimestamp()});
+    state.results.unshift({id:ref.id,...data,fechaRealizacion:new Date()});
+    // El resultado ya quedó guardado; si falla la actualización del resumen no se le debe pedir al estudiante repetir el examen.
+    try{
+      await setDoc(doc(db,'estudiantes',uid),{puntajeEstimado:puntaje,simulacrosRealizados:increment(1)},{merge:true});
+      const st=state.students[0];
+      if(st){st.puntajeEstimado=puntaje;st.simulacrosRealizados=(st.simulacrosRealizados||0)+1}
+    }catch(e){console.warn('No se pudo actualizar el resumen del estudiante',e)}
+    state.currentSim=null;state.answers={};state.currentIndex=0;
+    navigate('resultados');
+    openModal('Resultado del simulacro',summaryHtml(s.titulo,puntaje,ok,qs.length,byArea));
+  }catch(err){
+    console.error(err);toast('No se pudo guardar tu resultado: '+errMsg(err),'error');
+    document.querySelectorAll('[data-act="finishSim"]').forEach(b=>b.disabled=false);
+  }finally{state.busy=false}
+}
+function summaryHtml(titulo,puntaje,ok,total,byArea){
+  return `<div style="text-align:center"><div class="muted small">${esc(titulo||'Simulacro')}</div><div class="score">${puntaje}<span class="muted" style="font-size:18px"> / 500</span></div><div class="muted">${ok} acierto${ok===1?'':'s'} de ${total} · ${total-ok} error${total-ok===1?'':'es'}</div></div><div class="table-wrap" style="margin-top:16px"><table class="table"><thead><tr><th>Área</th><th>Aciertos</th><th>%</th></tr></thead><tbody>${Object.entries(byArea).map(([a,v])=>`<tr><td>${esc(a)}</td><td>${v.ok} / ${v.total}</td><td>${Math.round(v.ok/v.total*100)}%</td></tr>`).join('')}</tbody></table></div><div style="margin-top:16px"><button class="btn primary block" data-act="closeModal">Cerrar</button></div>`;
+}
+
+/* ---------- Resultados ---------- */
+function resultsPage(){
+  const student=role()==='estudiante';
+  const cols=student?5:6;
+  return `<div class="toolbar"><div><h2 style="margin:0">Resultados</h2><div class="muted small">${state.results.length} resultado${state.results.length===1?'':'s'}</div></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Fecha</th>${student?'':'<th>Estudiante</th>'}<th>Simulacro</th><th>Puntaje</th><th>Aciertos</th><th>Errores</th></tr></thead><tbody>${state.results.map(r=>{
+    const st=state.students.find(x=>x.id===r.estudianteId);
+    const sim=state.simulacros.find(x=>x.id===r.simulacroId);
+    return `<tr><td>${fmtDate(r.fechaRealizacion)}</td>${student?'':`<td>${esc(st?.nombre||'—')}</td>`}<td>${esc(r.simulacroTitulo||sim?.titulo||'—')}</td><td><b>${r.puntaje||0}</b></td><td>${r.aciertos||0}</td><td>${r.errores||0}</td></tr>`;
+  }).join('')||`<tr><td colspan="${cols}" class="empty">Aún no hay resultados.</td></tr>`}</tbody></table></div></div>`;
+}
+
+/* ---------- Banco de preguntas ---------- */
+function questionsPage(){
+  const can=isStaff(),cols=can?5:4;
+  return `<div class="toolbar"><div><h2 style="margin:0">Banco de preguntas</h2><div class="muted small">${state.questions.length} pregunta${state.questions.length===1?'':'s'} · contenido editable sin modificar código.</div></div>${can?'<button class="btn primary" data-act="openQuestion">+ Nueva pregunta</button>':''}</div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Área</th><th>Pregunta</th><th>Competencia</th><th>Dificultad</th>${can?'<th>Acciones</th>':''}</tr></thead><tbody>${state.questions.map(q=>`<tr><td><span class="badge">${esc(q.area)}</span></td><td class="wrap">${esc(q.enunciado)}</td><td>${esc(q.competencia||'')}</td><td>${esc(q.dificultad||'')}</td>${can?`<td class="actions"><button class="btn secondary" data-act="openQuestion" data-id="${esc(q.id)}">Editar</button><button class="btn danger" data-act="delQuestion" data-id="${esc(q.id)}">Eliminar</button></td>`:''}</tr>`).join('')||`<tr><td colspan="${cols}" class="empty">No hay preguntas.</td></tr>`}</tbody></table></div></div>`;
+}
+function openQuestion(id){
+  if(!isStaff())return;
+  const found=state.questions.find(x=>x.id===id);
+  const q=found||{enunciado:'',opciones:[],correcta:0,area:AREAS[0],competencia:'',dificultad:'Media'};
+  const ops=[0,1,2,3].map(i=>(q.opciones||[])[i]||'');
+  const areas=[...new Set([...AREAS,q.area].filter(Boolean))];
+  openModal(found?'Editar pregunta':'Nueva pregunta',`<form id="qForm">${fld('Enunciado',`<textarea name="enunciado" required>${esc(q.enunciado)}</textarea>`)}<div class="grid two">${ops.map((o,i)=>fld('Opción '+String.fromCharCode(65+i),`<input name="op${i}" required value="${esc(o)}">`)).join('')}</div><div class="grid three">${fld('Área',`<select name="area">${opts(areas,q.area)}</select>`)}${fld('Competencia',`<input name="competencia" value="${esc(q.competencia||'')}">`)}${fld('Dificultad',`<select name="dificultad">${opts(['Fácil','Media','Difícil'],q.dificultad||'Media')}</select>`)}</div>${fld('Respuesta correcta',`<select name="correcta">${[0,1,2,3].map(i=>`<option value="${i}" ${Number(q.correcta)===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}</select>`)}<button class="btn primary">Guardar</button></form>`);
+  bindForm('qForm',async f=>{
+    const data={enunciado:String(f.get('enunciado')).trim(),opciones:[0,1,2,3].map(i=>String(f.get('op'+i)).trim()),correcta:Number(f.get('correcta')),area:f.get('area'),competencia:String(f.get('competencia')||'').trim(),dificultad:f.get('dificultad')};
+    if(!data.enunciado||data.opciones.some(o=>!o))throw new Error('Completa el enunciado y las cuatro opciones.');
+    if(found){await updateDoc(doc(db,'preguntas',id),data);Object.assign(found,data)}
+    else{const r=await addDoc(collection(db,'preguntas'),{...data,creadoPor:state.user.uid,fechaCreacion:serverTimestamp()});state.questions.push({id:r.id,...data,creadoPor:state.user.uid})}
+    state.questions.sort((a,b)=>(AREAS.indexOf(a.area)-AREAS.indexOf(b.area))||String(a.enunciado).localeCompare(String(b.enunciado),'es'));
+    closeModal();toast('Pregunta guardada');navigate('preguntas');
+  });
+}
+async function delQuestion(id){
+  if(!isStaff()||!confirm('¿Eliminar esta pregunta? Esta acción no se puede deshacer.'))return;
+  try{await deleteDoc(doc(db,'preguntas',id));state.questions=state.questions.filter(q=>q.id!==id);toast('Pregunta eliminada');navigate('preguntas')}
+  catch(err){console.error(err);toast(errMsg(err),'error')}
+}
+
+/* ---------- Gestión ---------- */
+function gestionPage(){
+  if(!isStaff())return '<div class="card empty">No tienes permisos.</div>';
+  const tabs=isAdmin()?['instituciones','directivos','docentes','estudiantes','simulacros']:['directivos','docentes','estudiantes','simulacros'];
+  if(!tabs.includes(state.gestionTab))state.gestionTab=tabs[0];
+  return `<div class="tabs">${tabs.map(t=>`<button class="${t===state.gestionTab?'active':''}" data-act="gestionTab" data-tab="${t}">${TABS[t]}</button>`).join('')}</div><div id="gestionContent">${gestionTable(state.gestionTab)}</div>`;
+}
+function gestionTable(tab){
+  if(tab==='simulacros')return simTable();
+  if(tab==='instituciones')return institutionTable();
+  return usersTable(TAB_KIND[tab]);
+}
+
+function institutionTable(){
+  return `<div class="toolbar"><div><h2 style="margin:0">Colegios / instituciones</h2><div class="muted small">Registra y organiza las instituciones vinculadas a SABERX.</div></div><button class="btn primary" data-act="openInstitution">+ Registrar colegio</button></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Institución</th><th>Ciudad</th><th>Rector</th><th>Acción</th></tr></thead><tbody>${state.instituciones.map(x=>`<tr><td>${esc(x.nombre)}</td><td>${esc(x.ciudad||'')}</td><td>${esc(x.rector||'')}</td><td><button class="btn secondary" data-act="openInstitution" data-id="${esc(x.id)}">Editar</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">No hay instituciones.</td></tr>'}</tbody></table></div></div>`;
+}
+function openInstitution(id){
+  if(!isAdmin())return;
+  const found=state.instituciones.find(a=>a.id===id);
+  const x=found||{nombre:'',ciudad:'',rector:'',direccion:'',telefono:''};
+  openModal(found?'Editar colegio':'Registrar colegio',`<form id="instForm"><div class="grid two">${fld('Nombre',`<input name="nombre" required value="${esc(x.nombre)}">`)}${fld('Ciudad',`<input name="ciudad" required value="${esc(x.ciudad)}">`)}${fld('Rector(a)',`<input name="rector" value="${esc(x.rector)}">`)}${fld('Teléfono',`<input name="telefono" type="tel" value="${esc(x.telefono)}">`)}${fld('Dirección',`<input name="direccion" value="${esc(x.direccion)}">`,'grid-column:1/-1')}</div><button class="btn primary">Guardar institución</button></form>`);
+  bindForm('instForm',async f=>{
+    const data={nombre:String(f.get('nombre')).trim(),ciudad:String(f.get('ciudad')).trim(),rector:String(f.get('rector')||'').trim(),telefono:String(f.get('telefono')||'').trim(),direccion:String(f.get('direccion')||'').trim()};
+    if(!data.nombre||!data.ciudad)throw new Error('El nombre y la ciudad son obligatorios.');
+    if(found){await updateDoc(doc(db,'instituciones',id),data);Object.assign(found,data)}
+    else{const r=await addDoc(collection(db,'instituciones'),{...data,creadoPor:state.user.uid,fechaRegistro:serverTimestamp()});state.instituciones.push({id:r.id,...data})}
+    closeModal();toast('Institución guardada');navigate('gestion');
+  });
+}
+
+function usersTable(kind){
+  const k=KINDS[kind],arr=state[k.key];
+  return `<div class="toolbar"><div><h2 style="margin:0">${k.plural}</h2><div class="muted small">Cuentas y perfiles de la institución.</div></div><button class="btn primary" data-act="openUser" data-kind="${kind}">+ Crear</button></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Nombre</th><th>Correo</th><th>${k.third}</th><th>Acción</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${esc(x.nombre)}</td><td>${esc(x.email)}</td><td>${esc(x.curso||x.materia||x.cargo||'')}</td><td><button class="btn secondary" data-act="openUser" data-kind="${kind}" data-id="${esc(x.id)}">Editar</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">No hay registros.</td></tr>'}</tbody></table></div></div>`;
+}
+function instituteSelect(){
+  return fld('Colegio',`<select name="institucionId" required><option value="">Selecciona un colegio…</option>${state.instituciones.map(i=>`<option value="${esc(i.id)}">${esc(i.nombre)}</option>`).join('')}</select>`);
+}
+function openUser(kind,id){
+  if(!isStaff()||!KINDS[kind])return;
+  const k=KINDS[kind],arr=state[k.key],found=arr.find(a=>a.id===id);
+  const x=found||{nombre:'',email:'',grado:'11',curso:'',materia:'',cargo:'Coordinador',meta:400};
+  const extra=kind==='estudiante'
+    ?fld('Grado',`<input name="grado" value="${esc(x.grado||'11')}">`)+fld('Curso',`<input name="curso" value="${esc(x.curso||'')}">`)+fld('Meta (0–500)',`<input name="meta" type="number" min="0" max="500" value="${esc(x.meta||400)}">`)
+    :kind==='directivo'
+      ?fld('Cargo',`<select name="cargo">${opts(['Rector(a)','Coordinador','Orientador(a)','Director(a)'],x.cargo||'Coordinador')}</select>`)
+      :fld('Materia',`<input name="materia" value="${esc(x.materia||'')}">`);
+  const needInst=!found&&isAdmin();
+  openModal(found?'Editar '+kind:'Nuevo '+kind,`<form id="userForm">${found?'':'<div class="notice">La cuenta se crea mediante una función segura de Firebase; la contraseña nunca se guarda en Firestore.</div>'}<div class="grid two">${fld('Nombre completo',`<input name="nombre" required value="${esc(x.nombre)}">`)}${fld('Correo',`<input name="email" type="email" required value="${esc(x.email)}" ${found?'readonly':''}>`)}${found?'':fld('Contraseña inicial',`<input name="password" type="password" minlength="6" autocomplete="new-password" required>`)}${needInst?instituteSelect():''}${extra}</div><button class="btn primary">Guardar</button></form>`);
+  bindForm('userForm',async f=>{
+    const nombre=String(f.get('nombre')).trim();
+    if(!nombre)throw new Error('Escribe el nombre completo.');
+    const base=kind==='estudiante'
+      ?{grado:String(f.get('grado')||'').trim(),curso:String(f.get('curso')||'').trim(),meta:Math.min(500,Math.max(0,Number(f.get('meta')||400)))}
+      :kind==='directivo'?{cargo:f.get('cargo')}:{materia:String(f.get('materia')||'').trim()};
+    if(found){
+      const data={nombre,...base};
+      await updateDoc(doc(db,k.col,id),data);
+      await updateDoc(doc(db,'usuarios',id),{nombre});
+      Object.assign(found,data);
+    }else{
+      const institucionId=isAdmin()?f.get('institucionId'):state.perfil.institucionId;
+      if(!institucionId)throw new Error(isAdmin()?'Selecciona un colegio.':'Tu perfil no tiene una institución asignada.');
+      const data={nombre,email:String(f.get('email')).trim().toLowerCase(),...base,institucionId};
+      const result=await httpsCallable(functions,'createManagedUser')({email:data.email,password:f.get('password'),nombre,rol:kind,institucionId,extra:data});
+      arr.push({id:result.data?.uid||data.email,...data});
+    }
+    closeModal();toast('Usuario guardado');navigate('gestion');
+  });
+}
+
+function simTable(){
+  return `<div class="toolbar"><div><h2 style="margin:0">Simulacros</h2><div class="muted small">Diseña pruebas con las preguntas del banco.</div></div><button class="btn primary" data-act="openSim">+ Crear simulacro</button></div><div class="grid two">${state.simulacros.map(s=>`<div class="card"><h3>${esc(s.titulo)}</h3><div class="muted small">${esc(s.area||'Mixto')} · ${(s.preguntas||[]).filter(qById).length} preguntas${s.activo===false?' · <b>Inactivo</b>':''}</div><div class="toolbar-left" style="margin-top:12px"><button class="btn secondary" data-act="openSim" data-id="${esc(s.id)}">Editar</button><button class="btn danger" data-act="delSim" data-id="${esc(s.id)}">Eliminar</button></div></div>`).join('')||'<div class="card empty">No hay simulacros.</div>'}</div>`;
+}
+function openSim(id){
+  if(!isStaff())return;
+  const found=state.simulacros.find(x=>x.id===id);
+  const s=found||{titulo:'',area:'Mixto',preguntas:[],activo:true};
+  const needInst=!found&&isAdmin();
+  const chosen=new Set(s.preguntas||[]);
+  openModal(found?'Editar simulacro':'Nuevo simulacro',`<form id="simForm">${fld('Título',`<input name="titulo" required value="${esc(s.titulo)}">`)}${needInst?instituteSelect():''}${fld('Área',`<select name="area">${opts(['Mixto',...AREAS],s.area||'Mixto')}</select>`)}<div class="field"><span>Preguntas del simulacro</span><div class="check-list">${state.questions.map(q=>`<label class="check"><input type="checkbox" name="preguntas" value="${esc(q.id)}" ${chosen.has(q.id)?'checked':''}><span><b>${esc(q.area)}</b> — ${esc(String(q.enunciado||'').slice(0,90))}</span></label>`).join('')||'<div class="muted small" style="padding:8px">Primero crea preguntas en el banco.</div>'}</div></div><label class="check-inline"><input type="checkbox" name="activo" ${s.activo===false?'':'checked'}> Simulacro activo (visible para los estudiantes)</label><button class="btn primary">Guardar simulacro</button></form>`);
+  bindForm('simForm',async f=>{
+    const preguntas=f.getAll('preguntas');
+    if(!preguntas.length)throw new Error('Selecciona al menos una pregunta.');
+    const data={titulo:String(f.get('titulo')).trim(),area:f.get('area'),preguntas,activo:f.get('activo')==='on'};
+    if(!data.titulo)throw new Error('Escribe un título.');
+    if(found){await updateDoc(doc(db,'simulacros',id),data);Object.assign(found,data)}
+    else{
+      const institucionId=isAdmin()?f.get('institucionId'):state.perfil.institucionId;
+      if(!institucionId)throw new Error(isAdmin()?'Selecciona un colegio.':'Tu perfil no tiene una institución asignada.');
+      const full={...data,institucionId,creadoPor:state.user.uid};
+      const r=await addDoc(collection(db,'simulacros'),{...full,fechaCreacion:serverTimestamp()});
+      state.simulacros.push({id:r.id,...full});
+    }
+    closeModal();toast('Simulacro guardado');navigate(state.section==='inicio'?'gestion':state.section);
+  });
+}
+async function delSim(id){
+  if(!isStaff()||!confirm('¿Eliminar este simulacro? Los resultados ya guardados se conservan.'))return;
+  try{await deleteDoc(doc(db,'simulacros',id));state.simulacros=state.simulacros.filter(s=>s.id!==id);toast('Simulacro eliminado');navigate('gestion')}
+  catch(err){console.error(err);toast(errMsg(err),'error')}
+}
+
+/* ---------- Perfil ---------- */
+function profilePage(){
+  const p=state.perfil||{},inst=state.instituciones.find(i=>i.id===p.institucionId);
+  return `<div class="card"><h2 style="margin-top:0">Mi perfil</h2><div class="grid two">${fld('Nombre',`<input id="pfNombre" value="${esc(p.nombre||'')}">`)}${fld('Correo',`<input value="${esc(p.email||state.user?.email||'')}" readonly>`)}${fld('Rol',`<input value="${esc(ROLES[p.rol]||p.rol||'')}" readonly>`)}${fld('Institución',`<input value="${esc(inst?.nombre||p.institucionId||'—')}" readonly>`)}</div><div class="toolbar-left"><button class="btn primary" data-act="saveProfile">Guardar cambios</button><button class="btn secondary" data-act="resetPassword">Cambiar contraseña</button></div></div>`;
+}
+async function saveProfile(){
+  const nombre=$('pfNombre').value.trim();
+  if(!nombre){toast('El nombre no puede estar vacío.','error');return}
+  try{
+    await updateDoc(doc(db,'usuarios',state.user.uid),{nombre});
+    state.perfil.nombre=nombre;
+    toast('Perfil actualizado');renderShell();navigate('perfil');
+  }catch(err){console.error(err);toast(errMsg(err),'error')}
+}
+async function resetPassword(){
+  const email=state.perfil?.email||state.user?.email;
+  if(!email){toast('Tu perfil no tiene correo.','error');return}
+  try{await sendPasswordResetEmail(auth,email);toast('Te enviamos un enlace a '+email+' para cambiar tu contraseña.')}
+  catch(err){console.error(err);toast(authError(err),'error')}
+}
+
+/* ---------- Acciones (delegación de eventos) ---------- */
+const ACT={
+  logout,closeModal,finishSim,saveProfile,resetPassword,
+  startSim:t=>{
+    const s=state.simulacros.find(x=>x.id===t.dataset.id);
+    if(!s)return;
+    state.currentSim=s;state.currentIndex=0;state.answers={};navigate('simulacro');
+  },
+  exitSim:()=>{
+    if(Object.keys(state.answers).length&&!confirm('Si sales ahora perderás tus respuestas. ¿Salir del simulacro?'))return;
+    state.currentSim=null;state.answers={};state.currentIndex=0;navigate('simulacro');
+  },
+  answer:t=>{
+    const q=examQs()[state.currentIndex];
+    if(!q)return;
+    state.answers[q.id]=Number(t.dataset.i);rerenderKeepingScroll();
+  },
+  nextQ:()=>{state.currentIndex++;navigate('simulacro')},
+  prevQ:()=>{state.currentIndex--;navigate('simulacro')},
+  openQuestion:t=>openQuestion(t.dataset.id),
+  delQuestion:t=>delQuestion(t.dataset.id),
+  openInstitution:t=>openInstitution(t.dataset.id),
+  openUser:t=>openUser(t.dataset.kind,t.dataset.id),
+  openSim:t=>openSim(t.dataset.id),
+  delSim:t=>delSim(t.dataset.id),
+  gestionTab:t=>{
+    state.gestionTab=t.dataset.tab;
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===t));
+    $('gestionContent').innerHTML=gestionTable(state.gestionTab);
+  }
+};
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-s],[data-act]');
+  if(!t||t.disabled)return;
+  if(t.dataset.s){navigate(t.dataset.s);return}
+  const fn=ACT[t.dataset.act];
+  if(fn)fn(t);
+});
+window.__saberxReady=true;
+</script>
+</body>
+</html>
