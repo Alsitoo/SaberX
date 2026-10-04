@@ -161,7 +161,7 @@ import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswo
 import {getFirestore,collection,doc,getDoc,getDocs,addDoc,setDoc,updateDoc,deleteDoc,query,where,serverTimestamp,increment} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 import {getFunctions,httpsCallable} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-functions.js';
 
-const firebaseConfig={apiKey:'AIzaSyDM41_-4rNwPSyv25ZxjIr9CWV5fOndyhI',authDomain:'saberx-5f8a8.firebaseapp.com',projectId:'saberx-2f633',storageBucket:'saberx-2f633.firebasestorage.app',messagingSenderId:'137362785884',appId:'1:137362785884:web:3f0e41fd07dc911c854899'};
+const firebaseConfig={apiKey:'AIzaSyDM41_-4rNwPSyv25ZxjIr9CWV5fOndyhI',authDomain:'saberx-2f633.firebaseapp.com',projectId:'saberx-2f633',storageBucket:'saberx-2f633.firebasestorage.app',messagingSenderId:'137362785884',appId:'1:137362785884:web:3f0e41fd07dc911c854899'};
 const app=getApps().length?getApp():initializeApp(firebaseConfig);
 const auth=getAuth(app),db=getFirestore(app),functions=getFunctions(app);
 
